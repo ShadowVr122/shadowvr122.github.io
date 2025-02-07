@@ -154,33 +154,31 @@
         <iframe id="gameFrame"></iframe>
     </div>
 
-    <script>
-        function searchGames() {
-            let input = document.getElementById("searchBar").value.toLowerCase();
-            let games = document.querySelectorAll(".game-card");
+<script>
+    function playGame(gameUrl) {
+        document.getElementById("gameGrid").style.display = "none";
+        document.getElementById("searchBar").style.display = "none";
+        document.querySelector(".back-button").style.display = "block";
+        document.getElementById("gameContainer").style.display = "block";
+        document.getElementById("gameFrame").src = gameUrl;
 
-            games.forEach(game => {
-                let text = game.querySelector(".overlay").textContent.toLowerCase();
-                game.style.display = text.includes(input) ? "block" : "none";
-            });
-        }
+        // Extract game name from URL and update page URL
+        let gameName = gameUrl.split('/').pop().replace('.html', '');
+        history.pushState(null, "", gameName + ".html");
 
-        function playGame(gameUrl) {
-            document.getElementById("gameGrid").style.display = "none";
-            document.getElementById("searchBar").style.display = "none";
-            document.querySelector(".back-button").style.display = "block";
-            document.getElementById("gameContainer").style.display = "block";
-            document.getElementById("gameFrame").src = gameUrl;
-            document.getElementById("gameTitle").innerText = "Now Playing: " + gameUrl.split("/").pop().replace(".html", "").toUpperCase();
-        }
+        document.getElementById("gameTitle").innerText = "Now Playing: " + gameName.toUpperCase();
+    }
 
-        function goBack() {
-            document.getElementById("gameGrid").style.display = "flex";
-            document.getElementById("searchBar").style.display = "block";
-            document.querySelector(".back-button").style.display = "none";
-            document.getElementById("gameContainer").style.display = "none";
-            document.getElementById("gameFrame").src = "";
-        }
-    </script>
+    function goBack() {
+        document.getElementById("gameGrid").style.display = "flex";
+        document.getElementById("searchBar").style.display = "block";
+        document.querySelector(".back-button").style.display = "none";
+        document.getElementById("gameContainer").style.display = "none";
+        document.getElementById("gameFrame").src = "";
+
+        // Reset URL when going back
+        history.pushState(null, "", "index.html");
+    }
+</script>
 </body>
 </html>
