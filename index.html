@@ -147,33 +147,13 @@
         <iframe id="gameFrame"></iframe>
     </div>
     <script>
-        function playGame(gameUrl) {
-            document.getElementById("gameGrid").style.display = "none";
-            document.getElementById("searchBar").style.display = "none";
-            document.querySelector(".back-button").style.display = "block";
-            document.getElementById("gameContainer").style.display = "block";
-            document.getElementById("fullscreenButton").style.display = "block";
-            document.getElementById("gameFrame").src = gameUrl;
-            let gameName = gameUrl.split('/').pop().replace('.html', '');
-            history.pushState(null, "", gameName + ".html");
-            document.getElementById("gameTitle").innerText = "Now Playing: " + gameName.toUpperCase();
-        }
-        function goBack() {
-            document.getElementById("gameGrid").style.display = "flex";
-            document.getElementById("searchBar").style.display = "block";
-            document.querySelector(".back-button").style.display = "none";
-            document.getElementById("gameContainer").style.display = "none";
-            document.getElementById("fullscreenButton").style.display = "none";
-            document.getElementById("gameFrame").src = "";
-            history.pushState(null, "", "index.html");
-        }
-        function toggleFullscreen() {
-            let iframe = document.getElementById("gameFrame");
-            if (!document.fullscreenElement) {
-                iframe.requestFullscreen();
-            } else {
-                document.exitFullscreen();
-            }
+        function searchGames() {
+            let input = document.getElementById("searchBar").value.toLowerCase();
+            let games = document.querySelectorAll(".game-card");
+            games.forEach(game => {
+                let title = game.querySelector(".overlay").textContent.toLowerCase();
+                game.style.display = title.includes(input) ? "block" : "none";
+            });
         }
     </script>
 </body>
