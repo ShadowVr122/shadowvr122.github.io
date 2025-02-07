@@ -150,6 +150,90 @@
     <!-- Game Player -->
     <button class="back-button" onclick="goBack()">Back to Games</button>
     <div class="game-container" id="gameContainer">
+        <style>
+    /* Fullscreen button styling */
+    .fullscreen-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 15px;
+        font-size: 14px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        display: none;
+    }
+
+    .fullscreen-button:hover {
+        background: #e68900;
+    }
+</style>
+
+<!-- Game Player -->
+<button class="back-button" onclick="goBack()">Back to Games</button>
+<div class="game-container" id="gameContainer">
+    <button class="fullscreen-button" id="fullscreenButton" onclick="toggleFullscreen()">Fullscreen</button>
+    <h2 id="gameTitle">Now Playing</h2>
+    <iframe id="gameFrame"></iframe>
+</div>
+
+<script>
+    function playGame(gameUrl) {
+        document.getElementById("gameGrid").style.display = "none";
+        document.getElementById("searchBar").style.display = "none";
+        document.querySelector(".back-button").style.display = "block";
+        document.getElementById("gameContainer").style.display = "block";
+        document.getElementById("fullscreenButton").style.display = "block"; // Show fullscreen button
+        document.getElementById("gameFrame").src = gameUrl;
+
+        // Extract game name from URL and update page URL
+        let gameName = gameUrl.split('/').pop().replace('.html', '');
+        history.pushState(null, "", gameName + ".html");
+
+        document.getElementById("gameTitle").innerText = "Now Playing: " + gameName.toUpperCase();
+    }
+
+    function goBack() {
+        document.getElementById("gameGrid").style.display = "flex";
+        document.getElementById("searchBar").style.display = "block";
+        document.querySelector(".back-button").style.display = "none";
+        document.getElementById("gameContainer").style.display = "none";
+        document.getElementById("gameFrame").src = "";
+        document.getElementById("fullscreenButton").style.display = "none"; // Hide fullscreen button
+
+        // Reset URL when going back
+        history.pushState(null, "", "index.html");
+    }
+
+    function toggleFullscreen() {
+        let iframe = document.getElementById("gameFrame");
+
+        if (!document.fullscreenElement) {
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.mozRequestFullScreen) { // Firefox
+                iframe.mozRequestFullScreen();
+            } else if (iframe.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.msRequestFullscreen) { // IE/Edge
+                iframe.msRequestFullscreen();
+            }
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) { // Firefox
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { // IE/Edge
+                document.msExitFullscreen();
+            }
+        }
+    }
+</script>
+
         <h2 id="gameTitle">Now Playing</h2>
         <iframe id="gameFrame"></iframe>
     </div>
