@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unblocked Games</title>
 
-    <!-- Google Font for Similar Style -->
+    <!-- Google Font for Stylish Title -->
     <link href="https://fonts.googleapis.com/css2?family=Bungee+Inline&display=swap" rel="stylesheet">
 
     <style>
@@ -66,21 +66,40 @@
         a:hover {
             background: #ffeb3b;
         }
+
+        .game-container {
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            width: 80%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1 class="title">SHADOW'S UNBLOCKED GAMES</h1>
+        <h1 class="title">SHADOWVR122 Unblocked Games</h1>
     </div>
 
     <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
 
     <ul id="gameList">
-        <li><a href="game1.html">Game 1</a></li>
-        <li><a href="game2.html">Game 2</a></li>
-        <li><a href="game3.html">Game 3</a></li>
-        <li><a href="game4.html">Game 4</a></li>
+        <li><a href="games/flappybird.html">Flappy Bird</a></li>
+        <li><a href="games/snake.html">Snake</a></li>
+        <li><a href="games/pacman.html">Pac-Man</a></li>
+        <li><a href="https://granny.games/granny-online/" target="_blank">Granny Online (External)</a></li>
     </ul>
+
+    <div class="game-container">
+        <h2>Play Granny Online</h2>
+        <iframe src="https://granny.games/granny-online/"></iframe>
+    </div>
 
     <script>
         function searchGames() {
