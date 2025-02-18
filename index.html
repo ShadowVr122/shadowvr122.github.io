@@ -118,24 +118,6 @@
         .back-button:hover {
             background: #d32f2f;
         }
-
-        .proxy-container {
-            margin: 20px;
-        }
-
-        .proxy-button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .proxy-button:hover {
-            background: #388e3c;
-        }
     </style>
 </head>
 <body>
@@ -144,14 +126,6 @@
     </div>
 
     <input type="text" id="searchBar" placeholder="Search games..." onkeyup="searchGames()">
-
-    <!-- Proxy Section -->
-    <div class="proxy-container">
-        <h2>Use Proxy</h2>
-        <a href="https://loltrollproxy.github.io/" target="_blank">
-            <button class="proxy-button">Open Proxy</button>
-        </a>
-    </div>
 
     <!-- Game Selection Grid -->
     <div class="game-grid" id="gameGrid">
@@ -167,7 +141,7 @@
             <img src="thumbnails/pacman.jpg" alt="Pac-Man">
             <div class="overlay">Pac-Man</div>
         </div>
-        <div class="game-card" onclick="playGame('https://shadowvr122proxy.github.io/service/hvtrs8%2F-sz-games.github.io%2FGames8%2FGRANNY%2F')">
+        <div class="game-card" onclick="playGame('https://sz-games.github.io/Games8/GRANNY/')">
             <img src="thumbnails/granny.png" alt="Granny">
             <div class="overlay">Granny</div>
         </div>
@@ -192,8 +166,23 @@
         }
 
         function playGame(gameUrl) {
+            let proxyUrl = "https://shadowvr122.github.io/ProxyGameLoader.github.io/service/hvtrs8%2F-";
+            let encodedUrl = encodeURIComponent(gameUrl);
             document.getElementById("gameGrid").style.display = "none";
             document.getElementById("searchBar").style.display = "none";
             document.querySelector(".back-button").style.display = "block";
             document.getElementById("gameContainer").style.display = "block";
-            document.get
+            document.getElementById("gameFrame").src = proxyUrl + encodedUrl;
+            document.getElementById("gameTitle").innerText = "Now Playing: " + gameUrl.split("/").pop().replace(".html", "").toUpperCase();
+        }
+
+        function goBack() {
+            document.getElementById("gameGrid").style.display = "flex";
+            document.getElementById("searchBar").style.display = "block";
+            document.querySelector(".back-button").style.display = "none";
+            document.getElementById("gameContainer").style.display = "none";
+            document.getElementById("gameFrame").src = "";
+        }
+    </script>
+</body>
+</html>
