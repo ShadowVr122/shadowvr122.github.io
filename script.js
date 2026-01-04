@@ -1,66 +1,52 @@
 const searchBtn = document.getElementById("searchBtn");
-const resultsDiv = document.getElementById("results");
+const results = document.getElementById("results");
 
 searchBtn.addEventListener("click", async () => {
     const appId = document.getElementById("appId").value.trim();
-    resultsDiv.textContent = "";
+    results.textContent = "";
 
-    if (!appId) {
-        resultsDiv.textContent = "Please enter a valid Steam App ID.";
+    if (!/^\d+$/.test(appId)) {
+        results.textContent = "Invalid App ID";
         return;
     }
 
     try {
-        resultsDiv.textContent = "Searching manifests...";
+        results.textContent = "Searching ManifestHub...";
 
-        // GitHub search API -> find filenames containing the appId
-        const apiUrl = `https://api.github.com/search/code?q=${appId}+repo:SteamAutoCracks/ManifestHub`;
-        const searchResponse = await fetch(apiUrl);
+        const res = await fetch(
+            `https://api.github.com/search/code?q=${appId}+repo:SteamAutoCracks/ManifestHub`
+        );
 
-        if (!searchResponse.ok) {
-            throw new Error("Failed to query GitHub");
-        }
+        if (!res.ok) throw new Error("GitHub API limit");
 
-        const searchJson = await searchResponse.json();
-        const items = searchJson.items;
+        const data = await res.json();
 
-        if (!items || items.length === 0) {
-            resultsDiv.textContent = "No manifests found for that App ID.";
+        if (!data.items || data.items.length === 0) {
+            results.textContent = "No manifests found.";
             return;
         }
 
-        resultsDiv.textContent = "Manifests found. Preparing download...";
-
-        // Collect raw URLs
-        const urls = items.map(item =>
-            item.html_url
-                .replace("github.com", "raw.githubusercontent.com")
-                .replace("/blob/", "/")
-        );
-
-        // ZIP creation
         const zip = new JSZip();
-        for (let url of urls) {
-            const fileResponse = await fetch(url);
-            const content = await fileResponse.text();
 
-            const parts = url.split("/");
-            const fileName = parts[parts.length - 1];
-            zip.file(fileName, content);
+        for (const f of data.items) {
+            const raw = f.html_url
+                .replace("github.com", "raw.githubusercontent.com")
+                .replace("/blob/", "/");
+
+            zip.file(f.name, await (await fetch(raw)).text());
         }
 
         const blob = await zip.generateAsync({ type: "blob" });
-        const dlUrl = URL.createObjectURL(blob);
 
-        const link = document.createElement("a");
-        link.href = dlUrl;
-        link.download = `${appId}_manifests.zip`;
-        link.textContent = "Download ZIP";
-        
-        resultsDiv.innerHTML = "";
-        resultsDiv.appendChild(link);
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = `${appId}_manifests.zip`;
+        a.textContent = "Download ZIP";
 
-    } catch (err) {
-        resultsDiv.textContent = "Error: " + err.message;
+        results.innerHTML = "";
+        results.appendChild(a);
+
+    } catch {
+        results.textContent = "Error (GitHub API rate limit or CORS)";
     }
 });
